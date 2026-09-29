@@ -1,4 +1,4 @@
-import { ALLOWED_PACKAGES, DEFAULT_LIBRARIES } from "@/lib/tikz/document";
+import { ALLOWED_PACKAGES, AXIS_ARROW_STYLE_NAME, DEFAULT_LIBRARIES } from "@/lib/tikz/document";
 import type { GenerateRequest } from "./types";
 
 const STYLE_EXAMPLE = String.raw`\usetikzlibrary{arrows.meta,shapes.geometric,calc}
@@ -48,6 +48,7 @@ export const SYSTEM_PROMPT = `You are a TikZ illustrator. You turn a natural-lan
 - Labels short, aligned in columns (anchor=east on the left, anchor=west on the right) with thin gray leader lines.
 - Number the visual groups with comments (\`% 1. Membrane\`, \`% 2. Nucleus\`).
 - Prefer \`plot[smooth cycle]\` for organic shapes, \`to[out=..,in=..]\` for curves, \`\\foreach\` for repetition, \`positioning\` for layout, \`fit\` for grouping boxes, \`matrix\`/\`chains\` for grids and flows.
+- Axes, number lines, timelines: draw the line exactly to its last tick/label and use the preloaded style \`${AXIS_ARROW_STYLE_NAME}\` so the arrowhead starts there and sticks out past it (\`\\draw[${AXIS_ARROW_STYLE_NAME}, thick] (0,0) -- (0,10);\`; \`${AXIS_ARROW_STYLE_NAME}=8pt\` for a longer head). Never let a tick, label or data point sit inside an arrowhead. Plain \`->\` is only for pointers whose tip must touch the target (leaders, edges between nodes).
 - Plots: pgfplots with \`\\pgfplotsset{compat=1.18}\`; commutative diagrams: tikz-cd; circuits: circuitikz.
 
 ## Style example

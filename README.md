@@ -19,6 +19,7 @@ npm run dev                  # http://localhost:3000
 1. `POST /api/generate`:SSE 流式返回 Claude 写的 TikZ(`status` / `delta` / `done` / `error`)。
 2. `POST /api/tikz`:`{tikz, libraries, theme}` → 组装 `standalone` 文档 → `latex`(含 CJK 时 `xelatex -no-pdf`)→ `dvisvgm --no-fonts` → 清洗后返回 `{svg, width, height, engine, ms}`。
 3. 编译失败时把错误摘要回传模型自动修一次;仍失败则展示错误与可编辑代码。
+   - 文档预置样式 `axis arrow`(`\draw[axis arrow] (0,0) -- (0,10);`):箭头底部落在线条端点、箭尖向外伸出,刻度不会被箭头盖住;系统提示要求模型画坐标轴/数轴/时间轴时用它。`axis arrow=8pt` 调箭头长度,形状跟随 `>=`。
 4. 客户端按 `code + libraries + theme` 缓存 5 分钟并预热另一主题;服务端 LRU 缓存 200 条。
 5. 历史保存在 localStorage(最近 20 张)。
 
