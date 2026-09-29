@@ -17,6 +17,14 @@ const IMPLICIT_PACKAGES = new Set([
 
 export const DEFAULT_CJK_FONT = "Hiragino Sans GB";
 
+/** Arrow whose head starts at the path end and sticks out past it, so the line reaches its last tick and no
+ *  tick/label sits inside the head (plain `->` puts the tip at the endpoint). `axis arrow=8pt` sets the head
+ *  length; the head shape follows the picture's `>=`. Defined before the user preamble so a pasted document can
+ *  override it. */
+export const AXIS_ARROW_STYLE_NAME = "axis arrow";
+export const AXIS_ARROW_STYLE =
+  `\\tikzset{${AXIS_ARROW_STYLE_NAME}/.style={-{>[length=#1]}, shorten >=-#1}, ${AXIS_ARROW_STYLE_NAME}/.default=6pt}`;
+
 const LIBRARY_NAME = /^[a-zA-Z0-9.]+$/;
 
 /** Cheap first filter only; the real isolation is the process sandbox in compile.ts.
@@ -165,7 +173,7 @@ export function buildDocument(input: BuildInput): BuiltDocument {
     const font = input.cjkFont ?? DEFAULT_CJK_FONT;
     head.push("\\usepackage{fontspec}", "\\usepackage{xeCJK}", `\\setCJKmainfont{${font}}`, `\\setCJKsansfont{${font}}`);
   }
-  head.push(`\\usetikzlibrary{${libs.join(",")}}`, ...input.preamble);
+  head.push(`\\usetikzlibrary{${libs.join(",")}}`, AXIS_ARROW_STYLE, ...input.preamble);
   if (input.theme === "dark") head.push(...DARK_THEME_BLOCK);
   head.push("\\begin{document}");
   const tex = [...head, input.body, "\\end{document}", ""].join("\n");

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { buildUserMessage, SYSTEM_PROMPT } from "@/lib/llm/prompt";
+import { AXIS_ARROW_STYLE_NAME } from "@/lib/tikz/document";
 import { formatSse } from "@/lib/llm/types";
 
 describe("prompt", () => {
@@ -7,6 +8,9 @@ describe("prompt", () => {
     expect(SYSTEM_PROMPT).toContain("```tikz");
     expect(SYSTEM_PROMPT).toContain("\\special");
     expect(SYSTEM_PROMPT).toContain("standalone");
+  });
+  it("system prompt tells the model to draw axes with the preloaded axis arrow style", () => {
+    expect(SYSTEM_PROMPT).toContain(`\\draw[${AXIS_ARROW_STYLE_NAME}, thick] (0,0) -- (0,10);`);
   });
   it("user message carries theme and prompt; repair carries code and errors", () => {
     expect(buildUserMessage({ prompt: "a cell", theme: "dark" })).toMatch(/dark background[\s\S]*Draw: a cell/);

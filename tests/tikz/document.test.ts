@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  AXIS_ARROW_STYLE,
   buildDocument,
   DEFAULT_LIBRARIES,
   findForbiddenCommand,
@@ -118,6 +119,13 @@ describe("buildDocument", () => {
     expect(tex).not.toContain("definecolor{black}");
     expect(lines[bodyLineOffset]).toBe(base.body);
     expect(lines[bodyLineOffset - 1]).toBe("\\begin{document}");
+  });
+
+  it("preloads the axis arrow style (head starts at the endpoint) ahead of the user preamble", () => {
+    const { tex } = buildDocument({ ...base, theme: "light" });
+    expect(AXIS_ARROW_STYLE).toBe("\\tikzset{axis arrow/.style={-{>[length=#1]}, shorten >=-#1}, axis arrow/.default=6pt}");
+    expect(tex).toContain(AXIS_ARROW_STYLE);
+    expect(tex.indexOf(AXIS_ARROW_STYLE)).toBeLessThan(tex.indexOf("\\usepackage{pgfplots}"));
   });
 
   it("dark theme remaps black/white and sets the default ink", () => {
